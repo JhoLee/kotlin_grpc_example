@@ -1,5 +1,6 @@
-.idea/
-.gradle/
+.idea/codeStyles/*
+.idea/*
+.gradle
 
 
 # Created by .ignore support plugin (hsz.mobi)
@@ -279,4 +280,7 @@ Temporary Items
 .apdisk
 
 !/.idea/
+!/.idea/
+!/.idea/
+!/.idea/codeStyles/
 !/.idea/
