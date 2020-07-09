@@ -17,18 +17,22 @@ fun main() {
 
     var choice: String
     do {
-        println("(1) single->single (-1) quit")
+        println("(1) single->single (2) single->multi" +
+                " (-1) quit")
         print("Enter the number >> ")
         choice = readLine()!!
         when (Integer.parseInt(choice)) {
-            1 -> sayHello(channel)
+            1 -> sayHello(channel) // single->single
+            2 -> lotsOfReplies(channel) // single->multi
+//            3 -> lotsOfMessages(channel) // multi -> single
+//            4 -> bidiHello(channel) // multi -> multi
             -1 -> println("bye.")
             else -> println("???")
         }
-        // TODO
-    } while (choice.isNotBlank())
+    } while (Integer.parseInt(choice) != -1)
 
 }
+
 
 fun getHelloRequest(message: String, author: String, count: Int = 1): Hello.HelloRequest {
     return Hello.HelloRequest.newBuilder()
@@ -52,3 +56,21 @@ fun sayHello(channel: ManagedChannel) {
 
 }
 
+fun lotsOfReplies(channel: ManagedChannel?) {
+    val stub = HelloServiceGrpc.newBlockingStub(channel)
+
+    print("Enter the message >> ")
+    val message = readLine()!!
+    val author = "client"
+    print("Enter the number >> ")
+    val count = readLine()!!.toInt()
+    val request = getHelloRequest(message, author, count)
+
+    val response = stub.lotsOfReplies(request)
+    response.forEach {
+        println("[client] response() -> (${it.reply}, ${it.author}, ${it.count}")
+    }
+
+    println("[client] response.forEach is finished.")
+
+}

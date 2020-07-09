@@ -8,6 +8,7 @@ import io.grpc.stub.StreamObserver
 
 import org.example.proto.Hello
 import org.example.proto.HelloServiceGrpc
+import java.lang.Thread.sleep
 
 fun main() {
     println("[server] Starting...")
@@ -24,6 +25,14 @@ fun main() {
 }
 
 class HelloService : HelloServiceGrpc.HelloServiceImplBase() {
+    private fun getHelloResponse(reply: String, author: String, count: Int = 1): Hello.HelloResponse {
+        return Hello.HelloResponse.newBuilder()
+            .setReply(reply)
+            .setAuthor(author)
+            .setCount(count)
+            .build()
+    }
+
     override fun sayHello(request: Hello.HelloRequest?, responseObserver: StreamObserver<Hello.HelloResponse>?) {
         println("[server] sayHello(${request?.message}, ${request?.author}, ${request?.count})")
 
@@ -35,13 +44,20 @@ class HelloService : HelloServiceGrpc.HelloServiceImplBase() {
         responseObserver?.onCompleted()
     }
 
-    private fun getHelloResponse(reply: String, author: String, count: Int = 1): Hello.HelloResponse {
-        return Hello.HelloResponse.newBuilder()
-            .setReply(reply)
-            .setAuthor(author)
-            .setCount(count)
-            .build()
-    }
+    override fun lotsOfReplies(request: Hello.HelloRequest?, responseObserver: StreamObserver<Hello.HelloResponse>?) {
+        println("[server] lotsOfReplies(${request?.message}, ${request?.author}, ${request?.count})")
 
+        val reply = "You called 'lotsOfReplies(${request?.message}, ${request?.author}, ${request?.count})'"
+        val author = "Server"
+        val count = request?.count ?: 0
+
+        for (i in 1..count) {
+            val response = getHelloResponse("[${count}] $reply", author, i)
+            responseObserver?.onNext(response)
+
+            sleep(500)
+        }
+        responseObserver?.onCompleted()
+    }
 }
 
