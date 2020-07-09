@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package org.example.proto;
+option java_outer_classname = "Hello";
+
+message HelloRequest {
+  string message = 1;
+  string author = 2;
+  int32 count = 3;
+}
+
+message HelloResponse {
+  string reply = 1;
+  string author = 2;
+  int32 count = 3;
+}
+
+service HelloService {
+  // Single Request -> Single Response
+  rpc SayHello (HelloRequest) returns (HelloResponse);
+  // Single Response -> Multi Responses
+  rpc LotsOfReplies (HelloRequest) returns (stream HelloResponse);
+  // Multi Requests -> Single Response
+  rpc LotsOfGreetings (stream HelloRequest) returns (HelloResponse);
+  // Multi Requests -> Multi Responses
+  rpc BidiHello (stream HelloRequest) returns (stream HelloResponse);
+}
