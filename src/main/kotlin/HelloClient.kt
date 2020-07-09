@@ -20,7 +20,7 @@ fun main() {
     var choice: String
     do {
         println(
-            "(1) single->single (2) single->multi (3) multi->single (-1) quit"
+            "(1) single->single (2) single->multi (3) multi->single (4) multi->multi (-1) quit"
         )
         print("Enter the number >> ")
         choice = readLine()!!
@@ -28,7 +28,7 @@ fun main() {
             1 -> sayHello(channel) // single->single
             2 -> lotsOfReplies(channel) // single->multi
             3 -> lotsOfGreetings(channel) // multi -> single
-//            4 -> bidiHello(channel) // multi -> multi
+            4 -> bidiHello(channel) // multi -> multi
             -1 -> println("bye.")
             else -> println("???")
         }
@@ -94,6 +94,23 @@ fun lotsOfGreetings(channel: ManagedChannel?) {
     requestObserver.onCompleted()
 
 
+}
+
+fun bidiHello(channel: ManagedChannel?) {
+    val asyncStub = HelloServiceGrpc.newStub(channel)
+    val requestObserver = asyncStub.lotsOfGreetings(ResponseStreamObserver())
+
+    val message = "exampleMessage"
+    val author = "client4"
+    val count = 3
+
+    for (i in 1..count) {
+        val request = getHelloRequest(message, author, i)
+        println("[client] Calling server.bidiHello($message, $author, $i)")
+        requestObserver.onNext(request)
+        sleep(800)
+    }
+    requestObserver.onCompleted()
 }
 
 class ResponseStreamObserver : StreamObserver<Hello.HelloResponse> {
