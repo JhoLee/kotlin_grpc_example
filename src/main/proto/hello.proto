@@ -1,3 +1,6 @@
+/*
+ * Reference: snowdeer.github.io & grpc.io
+ */
 syntax = "proto3";
 
 package org.example.proto;

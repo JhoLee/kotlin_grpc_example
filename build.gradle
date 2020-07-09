@@ -42,6 +42,10 @@ dependencies {
     compile("javax.annotation:javax.annotation-api:1.3.2")
 }
 
+compileKotlin.dependsOn ':generateProto'
+sourceSets.main.java.srcDirs += "build/generated/source/proto/main/grpc"
+sourceSets.main.java.srcDirs += "build/generated/source/proto/main/java"
+
 compileKotlin {
     kotlinOptions.jvmTarget = "1.8"
 }
