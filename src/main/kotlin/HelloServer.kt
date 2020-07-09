@@ -59,5 +59,29 @@ class HelloService : HelloServiceGrpc.HelloServiceImplBase() {
         }
         responseObserver?.onCompleted()
     }
+
+    override fun lotsOfGreetings(responseObserver: StreamObserver<Hello.HelloResponse>?): StreamObserver<Hello.HelloRequest> {
+
+        return object : StreamObserver<Hello.HelloRequest> {
+            override fun onNext(value: Hello.HelloRequest?) {
+                println("[server] lotsOfGreetings() - onNext(${value?.message}, ${value?.author}, ${value?.count})")
+            }
+
+            override fun onError(t: Throwable?) {
+                println("[server] lotsOfGreetings() - onError()")
+            }
+
+            override fun onCompleted() {
+                println("[server] lotsOfGreetings() - onCompleted()")
+
+                val response = Hello.HelloResponse.newBuilder()
+                    .setReply("exampleReply")
+                    .setAuthor("server")
+                    .build()
+                responseObserver?.onNext(response)
+                responseObserver?.onCompleted()
+            }
+        }
+    }
 }
 
