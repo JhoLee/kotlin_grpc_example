@@ -279,8 +279,6 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
-!/.idea/
-!/.idea/
-!/.idea/
-!/.idea/codeStyles/
-!/.idea/
+/.idea/
+/.idea/codeStyles/
+/build/
